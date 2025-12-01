@@ -20,10 +20,12 @@ class RoboCar:  def __init__(self, model, year):
 
 
     #Sut dig selv SO!!
-    #def honk(self):
-        #print(f"The {self.year} {self.model} is honking its horn.")
-
+ kawa_branch
 
 
 
         6777777777777777777777777777777777777777777777777 - kawa
+
+        #sådan der du!
+        
+Main
