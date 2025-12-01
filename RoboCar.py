@@ -1,6 +1,6 @@
 print("hello world")
 
-
+#I like to goon
 
 class RoboCar:  def __init__(self, model, year):
         self.model = model
@@ -20,3 +20,8 @@ class RoboCar:  def __init__(self, model, year):
 
 
     #Sut dig selv SO!!
+
+
+
+
+    #easy facit level 10
