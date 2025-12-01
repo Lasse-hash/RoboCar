@@ -22,3 +22,6 @@ class RoboCar:  def __init__(self, model, year):
     #Sut dig selv SO!!
     #def honk(self):
         #print(f"The {self.year} {self.model} is honking its horn.")
+
+        #sådan der du!
+        
