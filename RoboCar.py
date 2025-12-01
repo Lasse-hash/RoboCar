@@ -24,4 +24,12 @@ class RoboCar:  def __init__(self, model, year):
 
 
 
+
     #easy facit level 10
+
+    #def honk(self):
+        #print(f"The {self.year} {self.model} is honking its horn.")
+
+        #sådan der du!
+        
+
