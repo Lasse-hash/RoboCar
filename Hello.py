@@ -1,5 +1,6 @@
 import RPi.GPIO as GPIO
 from time import sleep
+import keyboard
 
 from sshkeyboard import listen_keyboard
 
@@ -58,9 +59,11 @@ def turnLeft():
 def turnRight():
     GPIO.output(dir_left_bwd, False)
     GPIO.output(dir_left_fwd, True)
+
     GPIO.output(dir_right_fwd, False)
     GPIO.output(dir_right_bwd, False)
 # --- Run forward with speed ramp ---
+
 
 def press(key):
     if key == "w":
@@ -73,6 +76,18 @@ def press(key):
         backward()
 while True:
         listen_keyboard(on_press=press)
+
+while True:
+    if keyboard.is_pressed("w"):
+        forward()
+    if keyboard.is_pressed("a"):
+        turnLeft()
+    if keyboard.is_pressed("d"):
+        turnRight()
+    if keyboard.is_pressed("s"):
+        backward()
+
+
 #try:
  #   while True:
   #      for duty in range(0, 101, 5):
@@ -87,4 +102,8 @@ while True:
 #except KeyboardInterrupt:
  #   pwmL.stop()
   #  pwmR.stop()
+
    # GPIO.cleanup()
+=======
+   # GPIO.cleanup()
+
