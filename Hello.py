@@ -1,5 +1,6 @@
 import RPi.GPIO as GPIO
 from time import sleep
+import keyboard
 
 # --- Left motor ---
 pwm_left = 13
@@ -44,21 +45,43 @@ def backward():
     GPIO.output(dir_right_fwd, True)
     GPIO.output(dir_right_bwd, False)
 
+def turnLeft():
+    GPIO.output(dir_left_bwd, False)
+    GPIO.output(dir_left_fwd, False)
+
+    GPIO.output(dir_right_fwd, True)
+    GPIO.output(dir_right_bwd, False)
+
+def turnRight():
+    GPIO.output(dir_left_bwd, False)
+    GPIO.output(dir_left_fwd, True)
+
+    GPIO.output(dir_right_fwd, False)
+    GPIO.output(dir_right_bwd, False)
 # --- Run forward with speed ramp ---
-forward()
 
-try:
-    while True:
-        for duty in range(0, 101, 5):
-            pwmL.ChangeDutyCycle(duty)
-            pwmR.ChangeDutyCycle(duty)
-            sleep(0.1)
-        for duty in range(100, -1, -5):
-            pwmL.ChangeDutyCycle(duty)
-            pwmR.ChangeDutyCycle(duty)
-            sleep(0.1)
+while True:
+    if keyboard.is_pressed("w"):
+        forward()
+    if keyboard.is_pressed("a"):
+        turnLeft()
+    if keyboard.is_pressed("d"):
+        turnRight()
+    if keyboard.is_pressed("s"):
+        backward()
 
-except KeyboardInterrupt:
-    pwmL.stop()
-    pwmR.stop()
-    GPIO.cleanup()
+#try:
+ #   while True:
+  #      for duty in range(0, 101, 5):
+   #         pwmL.ChangeDutyCycle(duty)
+    #        pwmR.ChangeDutyCycle(duty)
+     #       sleep(0.1)
+      #  for duty in range(100, -1, -5):
+       #     pwmL.ChangeDutyCycle(duty)
+        #    pwmR.ChangeDutyCycle(duty)
+         #   sleep(0.1)
+
+#except KeyboardInterrupt:
+ #   pwmL.stop()
+  #  pwmR.stop()
+   # GPIO.cleanup()
