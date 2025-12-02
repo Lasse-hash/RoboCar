@@ -2,6 +2,8 @@ import RPi.GPIO as GPIO
 from time import sleep
 import keyboard
 
+from sshkeyboard import listen_keyboard
+
 # --- Left motor ---
 pwm_left = 13
 dir_left_fwd = 17
@@ -32,15 +34,17 @@ pwmR.start(0)
 def forward():
     GPIO.output(dir_left_fwd, True)
     GPIO.output(dir_left_bwd, False)
-    
+
     # Right motor inverted so wheels move the same way
     GPIO.output(dir_right_fwd, False)
     GPIO.output(dir_right_bwd, True)
 
+    pwmL.ChangeDutyCycle(100)
+    pwmR.ChangeDutyCycle(100)
 def backward():
     GPIO.output(dir_left_fwd, False)
     GPIO.output(dir_left_bwd, True)
-    
+
     # Right motor inverted
     GPIO.output(dir_right_fwd, True)
     GPIO.output(dir_right_bwd, False)
@@ -60,6 +64,19 @@ def turnRight():
     GPIO.output(dir_right_bwd, False)
 # --- Run forward with speed ramp ---
 
+
+def press(key):
+    if key == "w":
+        forward()
+    if key == "a":
+        turnLeft()
+    if key == "d":
+        turnRight()
+    if key == "s":
+        backward()
+while True:
+        listen_keyboard(on_press=press)
+
 while True:
     if keyboard.is_pressed("w"):
         forward()
@@ -69,6 +86,7 @@ while True:
         turnRight()
     if keyboard.is_pressed("s"):
         backward()
+
 
 #try:
  #   while True:
@@ -84,4 +102,8 @@ while True:
 #except KeyboardInterrupt:
  #   pwmL.stop()
   #  pwmR.stop()
+
    # GPIO.cleanup()
+=======
+   # GPIO.cleanup()
+
