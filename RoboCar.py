@@ -19,6 +19,7 @@ dir_right_bwd = 22
 GPIO_PINH = 24
 GPIO_PINV = 26
 
+sensor_delay = 0.03  
 
 # --- GPIO SETUP ---
 GPIO.cleanup()
@@ -122,6 +123,17 @@ def line_follow_loop():
     global running
     print("STARTING!")  
     while running:
+        
+        right = GPIO.input(GPIO_PINV)
+        left = GPIO.input(GPIO_PINH)
+
+        time.sleep(sensor_delay)
+
+        right2 = GPIO.input(GPIO_PINV)
+        left2 = GPIO.input(GPIO_PINH)
+        
+        if left != left2 or right != right2:
+            continue  
 
         if GPIO.input(GPIO_PINV) == GPIO.LOW and GPIO.input(GPIO_PINH) == GPIO.LOW:
             forward()
