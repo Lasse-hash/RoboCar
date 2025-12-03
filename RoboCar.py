@@ -95,7 +95,7 @@ def turn_left():
     pwmL1.ChangeDutyCycle(45)
     pwmL2.ChangeDutyCycle(45)
     pwmR1.ChangeDutyCycle(45)
-    pwmR2.ChangeDutyCycle(60)
+    pwmR2.ChangeDutyCycle(75)
 
 
 def turn_right():
@@ -107,7 +107,7 @@ def turn_right():
     GPIO.output(dir_right_bwd, True)
 
     pwmL1.ChangeDutyCycle(45)
-    pwmL2.ChangeDutyCycle(60)
+    pwmL2.ChangeDutyCycle(75)
     pwmR1.ChangeDutyCycle(45)
     pwmR2.ChangeDutyCycle(45)
 
@@ -119,6 +119,9 @@ def line_follow_loop():
     while True:
 
         if GPIO.input(GPIO_PINV) == GPIO.LOW and GPIO.input(GPIO_PINH) == GPIO.LOW:
+            forward()
+
+        if GPIO.input(GPIO_PINV) == GPIO.HIGH and GPIO.input(GPIO_PINH) == GPIO.HIGH:
             forward()
 
         elif GPIO.input(GPIO_PINH) == GPIO.HIGH:
