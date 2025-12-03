@@ -151,7 +151,8 @@ def press(key):
         GPIO.cleanup()
         exit()
 
-listen_keyboard(on_press=press)
+while True:
+    listen_keyboard(on_press=press)
 
 
 line_follow_loop()
