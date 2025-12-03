@@ -1,25 +1,24 @@
 import RPi.GPIO as GPIO
-from time import sleep
+import time
 
-speedPin = 35
-DirectionPin = 11
-
-GPIO.cleanup()
-GPIO.setwarnings(False)  
 GPIO.setmode(GPIO.BCM)
-GPIO.setup(speedPin, GPIO.OUT)
-GPIO.setup(DirectionPin, GPIO.OUT)
 
+# Pin connected to KY-033 sensor
+GPIO_PIN = 24
+GPIO.setup(GPIO_PIN, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 
-pi_pwm = GPIO.PWM(speedPin, 1000)
-pi_pwm.start(0)
-GPIO.output(DirectionPin, True)
+delayTime = 0.5
 
+print("Sensor-Test [press ctrl+c to end]")
 
-while True:
-    for speed in range(0, 101, 5):
-        pi_pwm.ChangeDutyCycle(duty)
-        sleep(0.1)
-    for speed in range(100, -1, -5):
-        pi_pwm.ChangeDutyCycle(duty)
-        sleep(0.1)
+try:
+    while True:
+        if GPIO.input(GPIO_PIN):
+            print("LineTracker is on the line")
+        else:
+            print("LineTracker is not on the line")
+        print("---------------------------------------")
+        time.sleep(delayTime)
+
+except KeyboardInterrupt:
+    GPIO.cleanup()
