@@ -78,10 +78,10 @@ def forward():
     GPIO.output(dir_right_fwd, False)
     GPIO.output(dir_right_bwd, True)
 
-    pwmL1.ChangeDutyCycle(35)
-    pwmL2.ChangeDutyCycle(35)
-    pwmR1.ChangeDutyCycle(35)
-    pwmR2.ChangeDutyCycle(35)
+    pwmL1.ChangeDutyCycle(25)
+    pwmL2.ChangeDutyCycle(25)
+    pwmR1.ChangeDutyCycle(25)
+    pwmR2.ChangeDutyCycle(25)
 
 
 def turn_left():
@@ -92,10 +92,10 @@ def turn_left():
     GPIO.output(dir_right_fwd, False)
     GPIO.output(dir_right_bwd, True)
 
-    pwmL1.ChangeDutyCycle(55)
-    pwmL2.ChangeDutyCycle(55)
-    pwmR1.ChangeDutyCycle(55)
-    pwmR2.ChangeDutyCycle(65)
+    pwmL1.ChangeDutyCycle(45)
+    pwmL2.ChangeDutyCycle(45)
+    pwmR1.ChangeDutyCycle(45)
+    pwmR2.ChangeDutyCycle(60)
 
 
 def turn_right():
@@ -106,10 +106,10 @@ def turn_right():
     GPIO.output(dir_right_fwd, True)
     GPIO.output(dir_right_bwd, False)
 
-    pwmL1.ChangeDutyCycle(55)
-    pwmL2.ChangeDutyCycle(65)
-    pwmR1.ChangeDutyCycle(55)
-    pwmR2.ChangeDutyCycle(55)
+    pwmL1.ChangeDutyCycle(45)
+    pwmL2.ChangeDutyCycle(60)
+    pwmR1.ChangeDutyCycle(45)
+    pwmR2.ChangeDutyCycle(45)
 
 
 #MAIN LINE LOOP
@@ -117,26 +117,22 @@ def turn_right():
 def line_follow_loop():
     print("STARTING!")  
     while True:
-        # Read sensors
-        left = GPIO.input(GPIO_PINV)
-        right = GPIO.input(GPIO_PINH)
 
-        # LOW = sees the line
-        if left == GPIO.LOW and right == GPIO.LOW:
+        if GPIO.input(GPIO_PINV) == GPIO.LOW and GPIO.input(GPIO_PINH) == GPIO.LOW:
             forward()
 
-        elif left == GPIO.HIGH:
+        elif GPIO.input(GPIO_PINH) == GPIO.HIGH:
             turn_right()
 
-        elif right == GPIO.HIGH:
+        elif GPIO.input(GPIO_PINV) == GPIO.HIGH:
             turn_left()
 
         time.sleep(delayTime)
-        listen_keyboard(on_press=press)
+
 
 
 line_follow_loop()
-
+listen_keyboard(on_press=press)
 
 
 
