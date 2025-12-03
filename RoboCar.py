@@ -1,5 +1,6 @@
 import RPi.GPIO as GPIO
 import time
+from sshkeyboard import listen_keyboard
 
 # --- Left motor ---
 pwm1_left = 13
@@ -40,7 +41,22 @@ pwmR2.start(0)
 
 delayTime = 0.5
 
+def stop():
+    GPIO.output(dir_left_bwd, False)
+    GPIO.output(dir_left_fwd, False)
 
+    GPIO.output(dir_right_fwd, False)
+    GPIO.output(dir_right_bwd, False)
+
+    
+    pwmL1.ChangeDutyCycle(0)
+    pwmL2.ChangeDutyCycle(0)
+    pwmR1.ChangeDutyCycle(0)
+    pwmR2.ChangeDutyCycle(0)
+
+def press(key):
+    if key == "q":
+        stop()
 
 try:
     while True:
@@ -95,6 +111,7 @@ try:
             pwmR2.ChangeDutyCycle(20)
 
         time.sleep(delayTime)
+        listen_keyboard(on_press=press)
 
 except KeyboardInterrupt:
     GPIO.cleanup()
