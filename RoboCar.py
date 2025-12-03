@@ -1,6 +1,7 @@
 import RPi.GPIO as GPIO
 import time
 from sshkeyboard import listen_keyboard
+import threading
 
 # --- Left motor ---
 pwm1_left = 13
@@ -70,7 +71,6 @@ def forward():
     GPIO.output(dir_left_fwd, False)
     GPIO.output(dir_left_bwd, True)
 
-    # Right motor inverted so wheels move the same way
     GPIO.output(dir_right_fwd, True)
     GPIO.output(dir_right_bwd, False)
 
@@ -82,20 +82,6 @@ def forward():
 
 def turn_left():
     print("Turning LEFT...")
-    GPIO.output(dir_left_bwd, True)
-    GPIO.output(dir_left_fwd, False)
-
-    GPIO.output(dir_right_fwd, False)
-    GPIO.output(dir_right_bwd, True)
-
-    pwmL1.ChangeDutyCycle(20)
-    pwmL2.ChangeDutyCycle(20)
-    pwmR1.ChangeDutyCycle(20)
-    pwmR2.ChangeDutyCycle(20)
-
-
-def turn_right():
-    print("Turning RIGHT...")
     GPIO.output(dir_left_bwd, False)
     GPIO.output(dir_left_fwd, True)
 
@@ -108,11 +94,25 @@ def turn_right():
     pwmR2.ChangeDutyCycle(20)
 
 
+def turn_right():
+    print("Turning RIGHT...")
+    GPIO.output(dir_left_bwd, True)
+    GPIO.output(dir_left_fwd, False)
+
+    GPIO.output(dir_right_fwd, False)
+    GPIO.output(dir_right_bwd, True)
+
+    pwmL1.ChangeDutyCycle(20)
+    pwmL2.ChangeDutyCycle(20)
+    pwmR1.ChangeDutyCycle(20)
+    pwmR2.ChangeDutyCycle(20)
+
+
 #MAIN LINE LOOP
 
 def line_follow_loop():
-
-        print("STARTING!")
+    print("STARTING!")  
+    while True:
         # Read sensors
         left = GPIO.input(GPIO_PINH)
         right = GPIO.input(GPIO_PINV)
@@ -137,7 +137,8 @@ def press(key):
         stop()
 
     if key == "z":
-        line_follow_loop()
+        #line_follow_loop()
+        threading.Thread(target=line_follow_loop).start()
         
 
     if key == "x":
