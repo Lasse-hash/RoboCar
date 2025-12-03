@@ -109,7 +109,7 @@ def turn_right():
     pwmL1.ChangeDutyCycle(55)
     pwmL2.ChangeDutyCycle(65)
     pwmR1.ChangeDutyCycle(55)
-    pwmR2.ChangeDutyCycle(5)
+    pwmR2.ChangeDutyCycle(55)
 
 
 #MAIN LINE LOOP
