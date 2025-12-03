@@ -1,16 +1,16 @@
 import RPi.GPIO as GPIO
 from time import sleep
-import keyboard
-
 from sshkeyboard import listen_keyboard
 
 # --- Left motor ---
-pwm_left = 13
+pwm1_left = 13
+pwm2_left = 12
 dir_left_fwd = 17
 dir_left_bwd = 23
 
 # --- Right motor ---
-pwm_right = 19
+pwm1_right = 19
+pwm2_right = 18
 dir_right_fwd = 27
 dir_right_bwd = 22
 
@@ -19,16 +19,20 @@ GPIO.cleanup()
 GPIO.setwarnings(False)
 GPIO.setmode(GPIO.BCM)
 
-for pin in [pwm_left, dir_left_fwd, dir_left_bwd,
-            pwm_right, dir_right_fwd, dir_right_bwd]:
+for pin in [pwm1_left, pwm2_left, dir_left_fwd, dir_left_bwd,
+            pwm1_right, pwm2_right, dir_right_fwd, dir_right_bwd]:
     GPIO.setup(pin, GPIO.OUT)
 
 # --- PWM objects ---
-pwmL = GPIO.PWM(pwm_left, 1000)
-pwmR = GPIO.PWM(pwm_right, 1000)
+pwmL1 = GPIO.PWM(pwm1_left, 1000)
+pwmL2 = GPIO.PWM(pwm2_left, 1000)
+pwmR1 = GPIO.PWM(pwm1_right, 1000)
+pwmR2 = GPIO.PWM(pwm2_right, 1000)
 
-pwmL.start(0)
-pwmR.start(0)
+pwmL1.start(0)
+pwmL2.start(0)
+pwmR1.start(0)
+pwmR2.start(0)
 
 # --- Functions to set direction ---
 def forward():
@@ -39,8 +43,10 @@ def forward():
     GPIO.output(dir_right_fwd, False)
     GPIO.output(dir_right_bwd, True)
 
-    pwmL.ChangeDutyCycle(100)
-    pwmR.ChangeDutyCycle(100)
+    pwmL1.ChangeDutyCycle(100)
+    pwmL2.ChangeDutyCycle(100)
+    pwmR1.ChangeDutyCycle(100)
+    pwmR2.ChangeDutyCycle(100)
 def backward():
     GPIO.output(dir_left_fwd, False)
     GPIO.output(dir_left_bwd, True)
@@ -49,19 +55,47 @@ def backward():
     GPIO.output(dir_right_fwd, True)
     GPIO.output(dir_right_bwd, False)
 
+    pwmL1.ChangeDutyCycle(50)
+    pwmL2.ChangeDutyCycle(50)
+    pwmR1.ChangeDutyCycle(50)
+    pwmR2.ChangeDutyCycle(50)
+
 def turnLeft():
-    GPIO.output(dir_left_bwd, False)
+    GPIO.output(dir_left_bwd, True)
     GPIO.output(dir_left_fwd, False)
 
-    GPIO.output(dir_right_fwd, True)
-    GPIO.output(dir_right_bwd, False)
+    GPIO.output(dir_right_fwd, False)
+    GPIO.output(dir_right_bwd, True)
+
+    pwmL1.ChangeDutyCycle(50)
+    pwmL2.ChangeDutyCycle(50)
+    pwmR1.ChangeDutyCycle(50)
+    pwmR2.ChangeDutyCycle(50)
 
 def turnRight():
     GPIO.output(dir_left_bwd, False)
     GPIO.output(dir_left_fwd, True)
 
+    GPIO.output(dir_right_fwd, True)
+    GPIO.output(dir_right_bwd, False)
+
+    pwmL1.ChangeDutyCycle(50)
+    pwmL2.ChangeDutyCycle(50)
+    pwmR1.ChangeDutyCycle(50)
+    pwmR2.ChangeDutyCycle(50)
+
+def stop():
+    GPIO.output(dir_left_bwd, False)
+    GPIO.output(dir_left_fwd, False)
+
     GPIO.output(dir_right_fwd, False)
     GPIO.output(dir_right_bwd, False)
+
+    
+    pwmL1.ChangeDutyCycle(0)
+    pwmL2.ChangeDutyCycle(0)
+    pwmR1.ChangeDutyCycle(0)
+    pwmR2.ChangeDutyCycle(0)
 # --- Run forward with speed ramp ---
 
 
@@ -74,36 +108,10 @@ def press(key):
         turnRight()
     if key == "s":
         backward()
+    if key == "q":
+        stop()
 while True:
         listen_keyboard(on_press=press)
 
-while True:
-    if keyboard.is_pressed("w"):
-        forward()
-    if keyboard.is_pressed("a"):
-        turnLeft()
-    if keyboard.is_pressed("d"):
-        turnRight()
-    if keyboard.is_pressed("s"):
-        backward()
 
-
-#try:
- #   while True:
-  #      for duty in range(0, 101, 5):
-   #         pwmL.ChangeDutyCycle(duty)
-    #        pwmR.ChangeDutyCycle(duty)
-     #       sleep(0.1)
-      #  for duty in range(100, -1, -5):
-       #     pwmL.ChangeDutyCycle(duty)
-        #    pwmR.ChangeDutyCycle(duty)
-         #   sleep(0.1)
-
-#except KeyboardInterrupt:
- #   pwmL.stop()
-  #  pwmR.stop()
-
-   # GPIO.cleanup()
-=======
-   # GPIO.cleanup()
 
