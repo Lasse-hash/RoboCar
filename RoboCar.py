@@ -49,6 +49,10 @@ pwmR2.start(0)
 
 delayTime = 0.1
 
+def press(key):
+
+    if key == "q":
+        stop()        
 
 
 def stop():
@@ -128,26 +132,12 @@ def line_follow_loop():
             turn_left()
 
         time.sleep(delayTime)
+        listen_keyboard(on_press=press)
 
 
-# --- KEYBOARD HANDLING ---
-def press(key):
-
-    if key == "q":
-        stop()
-
-    if key == "z":
-        #line_follow_loop()
-        threading.Thread(target=line_follow_loop).start()
-        
-
-    if key == "x":
-        print("EXITING...")
-        stop()
-        GPIO.cleanup()
-        exit()
+line_follow_loop()
 
 
-listen_keyboard(on_press=press)
+
 
 
