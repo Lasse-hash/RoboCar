@@ -54,64 +54,71 @@ def stop():
     pwmR1.ChangeDutyCycle(0)
     pwmR2.ChangeDutyCycle(0)
 
+def start():
+    try:
+        while True:
+            if GPIO.input(GPIO_PINH) == GPIO.HIGH or GPIO.input(GPIO_PINV) == GPIO.HIGH:
+                while True:
+
+                    pwmL1.ChangeDutyCycle(0)
+                    pwmL2.ChangeDutyCycle(0)
+                    pwmR1.ChangeDutyCycle(0)
+                    pwmR2.ChangeDutyCycle(0)
+
+                    #trying to find line again
+
+                    if GPIO.input(GPIO_PINH) == GPIO.HIGH:
+
+                        GPIO.output(dir_left_bwd, False)
+                        GPIO.output(dir_left_fwd, True)
+
+                        GPIO.output(dir_right_fwd, True)
+                        GPIO.output(dir_right_bwd, False)
+
+                        pwmL1.ChangeDutyCycle(20)
+                        pwmL2.ChangeDutyCycle(20)
+                        pwmR1.ChangeDutyCycle(20)
+                        pwmR2.ChangeDutyCycle(20)
+
+                    elif GPIO.input(GPIO_PINV) == GPIO.HIGH:
+                        GPIO.output(dir_left_bwd, True)
+                        GPIO.output(dir_left_fwd, False)
+
+                        GPIO.output(dir_right_fwd, False)
+                        GPIO.output(dir_right_bwd, True)
+
+                        pwmL1.ChangeDutyCycle(20)
+                        pwmL2.ChangeDutyCycle(20)
+                        pwmR1.ChangeDutyCycle(20)
+                        pwmR2.ChangeDutyCycle(20)
+                    if GPIO.input(GPIO_PINH) == GPIO.LOW and GPIO.input(GPIO_PINV) == GPIO.LOW:
+                        break
+
+            else:
+
+                GPIO.output(dir_left_fwd, False)
+                GPIO.output(dir_left_bwd, True)
+
+                GPIO.output(dir_right_fwd, True)
+                GPIO.output(dir_right_bwd, False)
+
+                pwmL1.ChangeDutyCycle(20)
+                pwmL2.ChangeDutyCycle(20)
+                pwmR1.ChangeDutyCycle(20)
+                pwmR2.ChangeDutyCycle(20)
+
+            time.sleep(delayTime)
+            listen_keyboard(on_press=press)
+
+    except KeyboardInterrupt:
+        GPIO.cleanup()
+
 def press(key):
     if key == "q":
         stop()
+    if key == "z":
+        start()
+while True:
+    listen_keyboard(on_press=press)
 
-try:
-    while True:
-        if GPIO.input(GPIO_PINH) == GPIO.HIGH or GPIO.input(GPIO_PINV) == GPIO.HIGH:
-            while True:
 
-                pwmL1.ChangeDutyCycle(0)
-                pwmL2.ChangeDutyCycle(0)
-                pwmR1.ChangeDutyCycle(0)
-                pwmR2.ChangeDutyCycle(0)
-
-                #trying to find line again
-
-                if GPIO.input(GPIO_PINH) == GPIO.HIGH:
-
-                    GPIO.output(dir_left_bwd, False)
-                    GPIO.output(dir_left_fwd, True)
-
-                    GPIO.output(dir_right_fwd, True)
-                    GPIO.output(dir_right_bwd, False)
-
-                    pwmL1.ChangeDutyCycle(20)
-                    pwmL2.ChangeDutyCycle(20)
-                    pwmR1.ChangeDutyCycle(20)
-                    pwmR2.ChangeDutyCycle(20)
-
-                elif GPIO.input(GPIO_PINV) == GPIO.HIGH:
-                    GPIO.output(dir_left_bwd, True)
-                    GPIO.output(dir_left_fwd, False)
-
-                    GPIO.output(dir_right_fwd, False)
-                    GPIO.output(dir_right_bwd, True)
-
-                    pwmL1.ChangeDutyCycle(20)
-                    pwmL2.ChangeDutyCycle(20)
-                    pwmR1.ChangeDutyCycle(20)
-                    pwmR2.ChangeDutyCycle(20)
-                if GPIO.input(GPIO_PINH) == GPIO.LOW and GPIO.input(GPIO_PINV) == GPIO.LOW:
-                    break
-
-        else:
-
-            GPIO.output(dir_left_fwd, False)
-            GPIO.output(dir_left_bwd, True)
-
-            GPIO.output(dir_right_fwd, True)
-            GPIO.output(dir_right_bwd, False)
-
-            pwmL1.ChangeDutyCycle(20)
-            pwmL2.ChangeDutyCycle(20)
-            pwmR1.ChangeDutyCycle(20)
-            pwmR2.ChangeDutyCycle(20)
-
-        time.sleep(delayTime)
-        listen_keyboard(on_press=press)
-
-except KeyboardInterrupt:
-    GPIO.cleanup()
