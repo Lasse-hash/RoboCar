@@ -1,44 +1,24 @@
-print("hello world")
+import RPi.GPIO as GPIO
+import time
 
-#I like to goon
+GPIO.setmode(GPIO.BCM)
 
-class RoboCar:  def __init__(self, model, year):
-        self.model = model
-        self.year = year                            
+# Pin connected to KY-033 sensor
+GPIO_PIN = 24
+GPIO.setup(GPIO_PIN, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 
+delayTime = 0.5
 
-    def start_engine(self):
-        print(f"The engine of the {self.year} {self.model} is starting.")   
+print("Sensor-Test [press ctrl+c to end]")
 
+try:
+    while True:
+        if GPIO.input(GPIO_PIN):
+            print("LineTracker is on the line")
+        else:
+            print("LineTracker is not on the line")
+        print("---------------------------------------")
+        time.sleep(delayTime)
 
-    def stop_engine(self):              
-        print(f"The engine of the {self.year} {self.model} is stopping.")
-
-
-    def drive(self, speed):
-        print(f"The {self.year} {self.model} is driving at {speed} mph.")       
-
-
-    #Sut dig selv SO!!
-
-
-
-
-
-    #easy facit level 10
-
-    #def honk(self):
-        #print(f"The {self.year} {self.model} is honking its horn.")
-
-        #sådan der du!
-        
-
- kawa_branch
-
-
-
-        6777777777777777777777777777777777777777777777777 - kawa
-
-        #sådan der du!
-        
-Main
+except KeyboardInterrupt:
+    GPIO.cleanup()
