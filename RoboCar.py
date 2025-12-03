@@ -18,8 +18,6 @@ dir_right_bwd = 22
 GPIO_PINH = 24
 GPIO_PINV = 26
 
-# PROGRAM STATE
-running = False
 
 # --- GPIO SETUP ---
 GPIO.cleanup()
@@ -53,8 +51,7 @@ delayTime = 0.1
 
 
 def stop():
-    global running
-    running = False
+    
 
     GPIO.output(dir_left_fwd, False)
     GPIO.output(dir_left_bwd, False)
@@ -110,12 +107,7 @@ def turn_right():
 #MAIN LINE LOOP
 
 def line_follow_loop():
-    global running
 
-    while True:
-        if not running:
-            time.sleep(0.1)
-            continue  # Keep loop alive but stop motors
         print("STARTING!")
         # Read sensors
         left = GPIO.input(GPIO_PINH)
@@ -136,13 +128,12 @@ def line_follow_loop():
 
 # --- KEYBOARD HANDLING ---
 def press(key):
-    global running
 
     if key == "q":
         stop()
 
     if key == "z":
-        running = True
+        line_follow_loop()
         
 
     if key == "x":
@@ -151,8 +142,7 @@ def press(key):
         GPIO.cleanup()
         exit()
 
-while True:
-    listen_keyboard(on_press=press)
+
+listen_keyboard(on_press=press)
 
 
-line_follow_loop()
