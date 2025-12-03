@@ -65,9 +65,14 @@ def start():
                     pwmR1.ChangeDutyCycle(0)
                     pwmR2.ChangeDutyCycle(0)
 
-                    #trying to find line again
+                    time.sleep(delayTime)
+                    print("Line Detected")
+                    print("Trying to find path again")
 
                     if GPIO.input(GPIO_PINH) == GPIO.HIGH:
+
+                        time.sleep(delayTime)
+                        print("Trying Right")
 
                         GPIO.output(dir_left_bwd, False)
                         GPIO.output(dir_left_fwd, True)
@@ -81,6 +86,10 @@ def start():
                         pwmR2.ChangeDutyCycle(20)
 
                     elif GPIO.input(GPIO_PINV) == GPIO.HIGH:
+
+                        time.sleep(delayTime)
+                        print("Trying Left")
+
                         GPIO.output(dir_left_bwd, True)
                         GPIO.output(dir_left_fwd, False)
 
