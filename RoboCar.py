@@ -122,13 +122,13 @@ def line_follow_loop():
         right = GPIO.input(GPIO_PINV)
 
         # LOW = sees the line
-        if left == GPIO.HIGH and right == GPIO.HIGH:
+        if left == GPIO.LOW and right == GPIO.LOW:
             forward()
 
-        elif left == GPIO.LOW:
+        elif left == GPIO.HIGH:
             turn_right()
 
-        elif right == GPIO.LOW:
+        elif right == GPIO.HIGH:
             turn_left()
 
         time.sleep(delayTime)
