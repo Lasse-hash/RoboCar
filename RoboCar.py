@@ -116,19 +116,19 @@ def line_follow_loop():
         if not running:
             time.sleep(0.1)
             continue  # Keep loop alive but stop motors
-
+        print("STARTING!")
         # Read sensors
         left = GPIO.input(GPIO_PINH)
         right = GPIO.input(GPIO_PINV)
 
         # LOW = sees the line
-        if left == GPIO.LOW and right == GPIO.LOW:
+        if left == GPIO.HIGH and right == GPIO.HIGH:
             forward()
 
-        elif left == GPIO.HIGH:
+        elif left == GPIO.LOW:
             turn_right()
 
-        elif right == GPIO.HIGH:
+        elif right == GPIO.LOW:
             turn_left()
 
         time.sleep(delayTime)
@@ -143,7 +143,7 @@ def press(key):
 
     if key == "z":
         running = True
-        print("STARTING!")
+        
 
     if key == "x":
         print("EXITING...")
