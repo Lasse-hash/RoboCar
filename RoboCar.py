@@ -47,11 +47,15 @@ pwmL2.start(0)
 pwmR1.start(0)
 pwmR2.start(0)
 
+running = True
+
 delayTime = 0.1
 
 def press(key):
-
+    global running
     if key == "q":
+        print("stopping")
+        running = False
         stop()        
 
 
@@ -78,10 +82,10 @@ def forward():
     GPIO.output(dir_right_fwd, False)
     GPIO.output(dir_right_bwd, True)
 
-    pwmL1.ChangeDutyCycle(25)
-    pwmL2.ChangeDutyCycle(25)
-    pwmR1.ChangeDutyCycle(25)
-    pwmR2.ChangeDutyCycle(25)
+    pwmL1.ChangeDutyCycle(30)
+    pwmL2.ChangeDutyCycle(30)
+    pwmR1.ChangeDutyCycle(30)
+    pwmR2.ChangeDutyCycle(30)
 
 
 def turn_left():
@@ -115,14 +119,17 @@ def turn_right():
 #MAIN LINE LOOP
 
 def line_follow_loop():
+    global running
     print("STARTING!")  
-    while True:
+    while running:
 
         if GPIO.input(GPIO_PINV) == GPIO.LOW and GPIO.input(GPIO_PINH) == GPIO.LOW:
             forward()
 
         if GPIO.input(GPIO_PINV) == GPIO.HIGH and GPIO.input(GPIO_PINH) == GPIO.HIGH:
             forward()
+            time.sleep(0.20)
+            continue
 
         elif GPIO.input(GPIO_PINH) == GPIO.HIGH:
             turn_right()
@@ -132,10 +139,13 @@ def line_follow_loop():
 
         time.sleep(delayTime)
 
-
+threading.Thread(
+    target=lambda: listen_keyboard(on_press=press),
+    daemon=True
+).start()
 
 line_follow_loop()
-listen_keyboard(on_press=press)
+
 
 
 
