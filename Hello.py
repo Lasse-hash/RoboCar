@@ -36,12 +36,12 @@ pwmR2.start(0)
 
 # --- Functions to set direction ---
 def forward():
-    GPIO.output(dir_left_fwd, True)
-    GPIO.output(dir_left_bwd, False)
+    GPIO.output(dir_left_fwd, False)
+    GPIO.output(dir_left_bwd, True)
 
     # Right motor inverted so wheels move the same way
-    GPIO.output(dir_right_fwd, False)
-    GPIO.output(dir_right_bwd, True)
+    GPIO.output(dir_right_fwd, True)
+    GPIO.output(dir_right_bwd, False)
 
     pwmL1.ChangeDutyCycle(100)
     pwmL2.ChangeDutyCycle(100)
