@@ -43,10 +43,10 @@ def forward():
     GPIO.output(dir_right_fwd, False)
     GPIO.output(dir_right_bwd, True)
 
-    pwmL1.ChangeDutyCycle(60)
-    pwmL2.ChangeDutyCycle(60)
-    pwmR1.ChangeDutyCycle(60)
-    pwmR2.ChangeDutyCycle(60)
+    pwmL1.ChangeDutyCycle(10)
+    pwmL2.ChangeDutyCycle(100)
+    pwmR1.ChangeDutyCycle(10)
+    pwmR2.ChangeDutyCycle(100)
 def backward():
     GPIO.output(dir_left_fwd, True)
     GPIO.output(dir_left_bwd, False)
