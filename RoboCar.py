@@ -118,8 +118,8 @@ def line_follow_loop():
     print("STARTING!")  
     while True:
         # Read sensors
-        left = GPIO.input(GPIO_PINH)
-        right = GPIO.input(GPIO_PINV)
+        left = GPIO.input(GPIO_PINV)
+        right = GPIO.input(GPIO_PINH)
 
         # LOW = sees the line
         if left == GPIO.LOW and right == GPIO.LOW:
