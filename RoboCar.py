@@ -78,10 +78,10 @@ def forward():
     GPIO.output(dir_right_fwd, True)
     GPIO.output(dir_right_bwd, False)
 
-    pwmL1.ChangeDutyCycle(70)
-    pwmL2.ChangeDutyCycle(70)
-    pwmR1.ChangeDutyCycle(70)
-    pwmR2.ChangeDutyCycle(70)
+    pwmL1.ChangeDutyCycle(60)
+    pwmL2.ChangeDutyCycle(60)
+    pwmR1.ChangeDutyCycle(60)
+    pwmR2.ChangeDutyCycle(60)
 
 
 def turn_left():
@@ -92,10 +92,10 @@ def turn_left():
     GPIO.output(dir_right_fwd, True)
     GPIO.output(dir_right_bwd, False)
 
-    pwmL1.ChangeDutyCycle(70)
-    pwmL2.ChangeDutyCycle(70)
-    pwmR1.ChangeDutyCycle(70)
-    pwmR2.ChangeDutyCycle(80)
+    pwmL1.ChangeDutyCycle(55)
+    pwmL2.ChangeDutyCycle(55)
+    pwmR1.ChangeDutyCycle(55)
+    pwmR2.ChangeDutyCycle(65)
 
 
 def turn_right():
@@ -106,10 +106,10 @@ def turn_right():
     GPIO.output(dir_right_fwd, False)
     GPIO.output(dir_right_bwd, True)
 
-    pwmL1.ChangeDutyCycle(70)
-    pwmL2.ChangeDutyCycle(80)
-    pwmR1.ChangeDutyCycle(70)
-    pwmR2.ChangeDutyCycle(70)
+    pwmL1.ChangeDutyCycle(55)
+    pwmL2.ChangeDutyCycle(65)
+    pwmR1.ChangeDutyCycle(55)
+    pwmR2.ChangeDutyCycle(5)
 
 
 #MAIN LINE LOOP
