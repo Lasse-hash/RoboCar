@@ -86,11 +86,11 @@ def forward():
 
 def turn_left():
     print("Turning LEFT...")
-    GPIO.output(dir_left_bwd, True)
-    GPIO.output(dir_left_fwd, False)
+    GPIO.output(dir_left_bwd, False)
+    GPIO.output(dir_left_fwd, True)
 
-    GPIO.output(dir_right_fwd, False)
-    GPIO.output(dir_right_bwd, True)
+    GPIO.output(dir_right_fwd, True)
+    GPIO.output(dir_right_bwd, False)
 
     pwmL1.ChangeDutyCycle(45)
     pwmL2.ChangeDutyCycle(45)
@@ -100,11 +100,11 @@ def turn_left():
 
 def turn_right():
     print("Turning RIGHT...")
-    GPIO.output(dir_left_bwd, False)
-    GPIO.output(dir_left_fwd, True)
+    GPIO.output(dir_left_bwd, True)
+    GPIO.output(dir_left_fwd, False)
 
-    GPIO.output(dir_right_fwd, True)
-    GPIO.output(dir_right_bwd, False)
+    GPIO.output(dir_right_fwd, False)
+    GPIO.output(dir_right_bwd, True)
 
     pwmL1.ChangeDutyCycle(45)
     pwmL2.ChangeDutyCycle(60)
