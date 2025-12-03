@@ -68,7 +68,7 @@ def turnLeft():
     GPIO.output(dir_right_bwd, True)
 
     pwmL1.ChangeDutyCycle(50)
-    pwmL2.ChangeDutyCycle(70)
+    pwmL2.ChangeDutyCycle(80)
     pwmR1.ChangeDutyCycle(50)
     pwmR2.ChangeDutyCycle(50)
 
@@ -83,7 +83,7 @@ def turnRight():
     pwmL1.ChangeDutyCycle(50)
     pwmL2.ChangeDutyCycle(50)
     pwmR1.ChangeDutyCycle(50)
-    pwmR2.ChangeDutyCycle(70)
+    pwmR2.ChangeDutyCycle(80)
 
 def stop():
     GPIO.output(dir_left_bwd, False)
