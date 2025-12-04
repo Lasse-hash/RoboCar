@@ -92,11 +92,11 @@ def forward():
 
 def turn_left():
     print("Turning LEFT...")
-    GPIO.output(dir_left_bwd, False)
-    GPIO.output(dir_left_fwd, True)
+    GPIO.output(dir_left_bwd, True)
+    GPIO.output(dir_left_fwd, False)
 
-    GPIO.output(dir_right_fwd, True)
-    GPIO.output(dir_right_bwd, False)
+    GPIO.output(dir_right_fwd, False)
+    GPIO.output(dir_right_bwd, True)
 
     pwmL1.ChangeDutyCycle(50)
     pwmL2.ChangeDutyCycle(65)
@@ -106,11 +106,11 @@ def turn_left():
 
 def turn_right():
     print("Turning RIGHT...")
-    GPIO.output(dir_left_bwd, True)
-    GPIO.output(dir_left_fwd, False)
+    GPIO.output(dir_left_bwd, False)
+    GPIO.output(dir_left_fwd, True)
 
-    GPIO.output(dir_right_fwd, False)
-    GPIO.output(dir_right_bwd, True)
+    GPIO.output(dir_right_fwd, True)
+    GPIO.output(dir_right_bwd, False)
 
     pwmL1.ChangeDutyCycle(65)
     pwmL2.ChangeDutyCycle(75)
@@ -146,11 +146,9 @@ def get_distance():
         pulse_start = time.time()
 
     # Wait for echo end
-    timeout = time.time() +  0.02
+   
     while GPIO.input(ECHO) == 1:
         pulse_end = time.time()
-        if pulse_end > timeout:
-            return None
 
     pulse_duration = pulse_end - pulse_start
     # Speed of sound ~34300 cm/s
