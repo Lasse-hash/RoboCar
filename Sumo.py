@@ -179,11 +179,11 @@ def Sumo():
 
         elif GPIO.input(GPIO_PINH) == GPIO.HIGH:
             turn_right()
-            time.sleep(0.5)
+            time.sleep(1)
 
         elif GPIO.input(GPIO_PINV) == GPIO.HIGH:
             turn_left()
-            time.sleep(0.5)
+            time.sleep(1)
 
         if dist <= 20:
             slam()
