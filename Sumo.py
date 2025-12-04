@@ -125,6 +125,8 @@ def turn_right():
 def turn_back():
     global turnedback
 
+    print("Turning back")
+
     GPIO.output(dir_left_fwd, False)
     GPIO.output(dir_left_bwd, True)
 
