@@ -50,7 +50,7 @@ try:
         if d is None:
             print("⚠ No echo received — sensor not detecting anything")
         else:
-            print(f"Distance: {d} cm")
+            print(f"Distance: {d:.1f} cm")
 
         time.sleep(0.3)
 
