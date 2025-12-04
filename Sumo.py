@@ -84,10 +84,10 @@ def forward():
     GPIO.output(dir_right_fwd, False)
     GPIO.output(dir_right_bwd, True)
 
-    pwmL1.ChangeDutyCycle(30)
-    pwmL2.ChangeDutyCycle(30)
-    pwmR1.ChangeDutyCycle(30)
-    pwmR2.ChangeDutyCycle(30)
+    pwmL1.ChangeDutyCycle(40)
+    pwmL2.ChangeDutyCycle(40)
+    pwmR1.ChangeDutyCycle(40)
+    pwmR2.ChangeDutyCycle(40)
 
 
 def turn_left():
@@ -146,13 +146,16 @@ def get_distance():
         pulse_start = time.time()
 
     # Wait for echo end
+    timeout = time.time() +  0.02
     while GPIO.input(ECHO) == 1:
         pulse_end = time.time()
+        if pulse_end > timeout:
+            return None
 
     pulse_duration = pulse_end - pulse_start
     # Speed of sound ~34300 cm/s
     distance_cm = pulse_duration * 34300 / 2
-    return distance_cm
+    return round(distance_cm, 2)
 
 def Sumo():
     global running
@@ -174,19 +177,21 @@ def Sumo():
         if left != left2 or right != right2:
             continue  
 
-        if GPIO.input(GPIO_PINV) == GPIO.LOW and GPIO.input(GPIO_PINH) == GPIO.LOW:
+        if left == GPIO.LOW and right == GPIO.LOW:
             forward()
+            if dist <= 20:
+                slam()
+            else:
+                pwmL1.ChangeDutyCycle(random.uniform(40, 65))
+                pwmR1.ChangeDutyCycle(random.uniform(40, 65))
 
         elif GPIO.input(GPIO_PINH) == GPIO.HIGH:
             turn_right()
-            time.sleep(1)
+            time.sleep(0.2)
 
         elif GPIO.input(GPIO_PINV) == GPIO.HIGH:
             turn_left()
-            time.sleep(1)
-
-        if dist <= 20:
-            slam()
+            time.sleep(0.2)
         
 
         time.sleep(delayTime)
