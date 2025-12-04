@@ -140,8 +140,8 @@ def line_follow_loop():
 
         if GPIO.input(GPIO_PINV) == GPIO.HIGH and GPIO.input(GPIO_PINH) == GPIO.HIGH:
             forward()
-            time.sleep(0.20)
-            continue
+            time.sleep(0.05)
+            
 
         elif GPIO.input(GPIO_PINH) == GPIO.HIGH:
             turn_right()
