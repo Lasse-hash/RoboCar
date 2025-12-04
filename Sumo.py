@@ -185,7 +185,7 @@ def Sumo():
             turn_left()
             time.sleep(random.uniform(0.5, 1))
 
-        if dist >= 20:
+        if dist <= 20:
             slam()
         
 
