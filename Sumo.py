@@ -1,59 +1,47 @@
 import RPi.GPIO as GPIO
 import time
 
+# Use BCM (Broadcom pin numbering)
 GPIO.setmode(GPIO.BCM)
 
-TRIG = 20
-ECHO = 16
+TRIG = 23   # Example GPIO pin for Trigger
+ECHO = 24   # Example GPIO pin for Echo
 
 GPIO.setup(TRIG, GPIO.OUT)
 GPIO.setup(ECHO, GPIO.IN)
 
-GPIO.output(TRIG, False)
-print("Calibrating…")
-time.sleep(2)
-print("Place the object…")
-
 def get_distance():
-    # Send trigger pulse
+    # Ensure trigger is low
+    GPIO.output(TRIG, False)
+    time.sleep(0.05)
+
+    # Send a 10µs pulse to trigger
     GPIO.output(TRIG, True)
-    time.sleep(0.00001)   # 10 microseconds
+    time.sleep(0.00001)
     GPIO.output(TRIG, False)
 
-    # Wait for echo to go HIGH
-    start_time = time.time()
-    timeout = start_time + 0.02  # 20ms timeout
-
+    # Wait for echo start
     while GPIO.input(ECHO) == 0:
         pulse_start = time.time()
-        if pulse_start > timeout:
-            return None  # no echo received
 
-    # Wait for echo to go LOW
-    timeout = time.time() + 0.02
+    # Wait for echo end
     while GPIO.input(ECHO) == 1:
         pulse_end = time.time()
-        if pulse_end > timeout:
-            return None
 
-    # Calculate distance
     pulse_duration = pulse_end - pulse_start
-    distance = pulse_duration * 17150  # cm
-
-    return round(distance, 2)
-
+    # Speed of sound ~34300 cm/s
+    distance_cm = pulse_duration * 34300 / 2
+    return distance_cm
 
 try:
     while True:
-        d = get_distance()
-
-        if d is None:
-            print("⚠ No echo received — sensor not detecting anything")
+        dist = get_distance()
+        if dist > 2 and dist < 450:  # working range of RCWL‑1601 per datasheet
+            print(f"Distance: {dist:.1f} cm")
         else:
-            print(f"Distance: {d:.1f} cm")
-
-        time.sleep(0.3)
+            print("Out of range")
+        time.sleep(1)
 
 except KeyboardInterrupt:
+    print("Measurement stopped by user")
     GPIO.cleanup()
-    print("Clean exit")
