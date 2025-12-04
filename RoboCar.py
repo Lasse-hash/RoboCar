@@ -1,25 +1,167 @@
 import RPi.GPIO as GPIO
 import time
+from sshkeyboard import listen_keyboard
+import threading
 
+# --- Left motor ---
+pwm1_left = 13
+pwm2_left = 12
+dir_left_fwd = 17
+dir_left_bwd = 23
+
+# --- Right motor ---
+pwm1_right = 19
+pwm2_right = 18
+dir_right_fwd = 27
+dir_right_bwd = 22
+
+# --- Line sensors ---
+GPIO_PINH = 24
+GPIO_PINV = 26
+
+sensor_delay = 0.03  
+
+# --- GPIO SETUP ---
+GPIO.cleanup()
+GPIO.setwarnings(False)
 GPIO.setmode(GPIO.BCM)
 
-# Pin connected to KY-033 sensor
-GPIO_PIN = 24
-GPIO.setup(GPIO_PIN, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+motor_pins = [
+    pwm1_left, pwm2_left, dir_left_fwd, dir_left_bwd,
+    pwm1_right, pwm2_right, dir_right_fwd, dir_right_bwd
+]
 
-delayTime = 0.5
+for pin in motor_pins:
+    GPIO.setup(pin, GPIO.OUT)
 
-print("Sensor-Test [press ctrl+c to end]")
+GPIO.setup(GPIO_PINH, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+GPIO.setup(GPIO_PINV, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 
-try:
-    while True:
-        if GPIO.input(GPIO_PIN):
-            print("LineTracker is on the line")
-        else:
-            print("LineTracker is not on the line")
-        print("---------------------------------------")
+# PWM setup
+pwmL1 = GPIO.PWM(pwm1_left, 1000)
+pwmL2 = GPIO.PWM(pwm2_left, 1000)
+pwmR1 = GPIO.PWM(pwm1_right, 1000)
+pwmR2 = GPIO.PWM(pwm2_right, 1000)
+
+pwmL1.start(0)
+pwmL2.start(0)
+pwmR1.start(0)
+pwmR2.start(0)
+
+running = True
+
+delayTime = 0.1
+
+def press(key):
+    global running
+    if key == "q":
+        print("stopping")
+        running = False
+        stop()        
+
+
+def stop():
+    
+
+    GPIO.output(dir_left_fwd, False)
+    GPIO.output(dir_left_bwd, False)
+    GPIO.output(dir_right_fwd, False)
+    GPIO.output(dir_right_bwd, False)
+
+    pwmL1.ChangeDutyCycle(0)
+    pwmL2.ChangeDutyCycle(0)
+    pwmR1.ChangeDutyCycle(0)
+    pwmR2.ChangeDutyCycle(0)
+
+    print("STOPPED")
+
+
+def forward():
+    GPIO.output(dir_left_fwd, True)
+    GPIO.output(dir_left_bwd, False)
+
+    GPIO.output(dir_right_fwd, False)
+    GPIO.output(dir_right_bwd, True)
+
+    pwmL1.ChangeDutyCycle(30)
+    pwmL2.ChangeDutyCycle(30)
+    pwmR1.ChangeDutyCycle(30)
+    pwmR2.ChangeDutyCycle(30)
+
+
+def turn_left():
+    print("Turning LEFT...")
+    GPIO.output(dir_left_bwd, False)
+    GPIO.output(dir_left_fwd, True)
+
+    GPIO.output(dir_right_fwd, True)
+    GPIO.output(dir_right_bwd, False)
+
+    pwmL1.ChangeDutyCycle(50)
+    pwmL2.ChangeDutyCycle(65)
+    pwmR1.ChangeDutyCycle(65)
+    pwmR2.ChangeDutyCycle(75)
+
+
+def turn_right():
+    print("Turning RIGHT...")
+    GPIO.output(dir_left_bwd, True)
+    GPIO.output(dir_left_fwd, False)
+
+    GPIO.output(dir_right_fwd, False)
+    GPIO.output(dir_right_bwd, True)
+
+    pwmL1.ChangeDutyCycle(65)
+    pwmL2.ChangeDutyCycle(75)
+    pwmR1.ChangeDutyCycle(50)
+    pwmR2.ChangeDutyCycle(65)
+
+
+#MAIN LINE LOOP
+
+def line_follow_loop():
+    global running
+    print("STARTING!")  
+    while running:
+        
+        right = GPIO.input(GPIO_PINV)
+        left = GPIO.input(GPIO_PINH)
+
+        time.sleep(sensor_delay)
+
+        right2 = GPIO.input(GPIO_PINV)
+        left2 = GPIO.input(GPIO_PINH)
+        
+        if left != left2 or right != right2:
+            continue  
+
+        if GPIO.input(GPIO_PINV) == GPIO.LOW and GPIO.input(GPIO_PINH) == GPIO.LOW:
+            forward()
+
+        if GPIO.input(GPIO_PINV) == GPIO.HIGH and GPIO.input(GPIO_PINH) == GPIO.HIGH:
+            forward()
+            time.sleep(0.20)
+            continue
+
+        elif GPIO.input(GPIO_PINH) == GPIO.HIGH:
+            turn_right()
+
+        elif GPIO.input(GPIO_PINV) == GPIO.HIGH:
+            turn_left()
+
         time.sleep(delayTime)
 
 except KeyboardInterrupt:
     GPIO.cleanup()
     
+threading.Thread(
+    target=lambda: listen_keyboard(on_press=press),
+    daemon=True
+).start()
+
+line_follow_loop()
+
+
+
+
+
