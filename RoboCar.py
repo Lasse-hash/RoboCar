@@ -19,7 +19,7 @@ dir_right_bwd = 22
 GPIO_PINH = 24
 GPIO_PINV = 26
 
-sensor_delay = 0.03  
+sensor_delay = 0.005  
 
 last_direction = "forward" 
 
@@ -52,7 +52,7 @@ pwmR2.start(0)
 
 running = True
 
-delayTime = 0.1
+delayTime = 0.005
 
 def press(key):
     global running
@@ -85,10 +85,10 @@ def forward():
     GPIO.output(dir_right_fwd, False)
     GPIO.output(dir_right_bwd, True)
 
-    pwmL1.ChangeDutyCycle(30)
-    pwmL2.ChangeDutyCycle(30)
-    pwmR1.ChangeDutyCycle(30)
-    pwmR2.ChangeDutyCycle(30)
+    pwmL1.ChangeDutyCycle(20)
+    pwmL2.ChangeDutyCycle(20)
+    pwmR1.ChangeDutyCycle(20)
+    pwmR2.ChangeDutyCycle(20)
 
 
 def turn_left():
@@ -135,12 +135,7 @@ def line_follow_loop():
         left2 = GPIO.input(GPIO_PINH)
         
         if left != left2 or right != right2:
-            if last_direction == "right":
-                turn_right()
-            elif last_direction == "left":
-                turn_left()
-            else:
-                forward()
+            continue  
 
         if GPIO.input(GPIO_PINV) == GPIO.LOW and GPIO.input(GPIO_PINH) == GPIO.LOW:
             forward()
