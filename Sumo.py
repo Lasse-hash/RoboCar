@@ -206,26 +206,26 @@ def Sumo():
 
         if left == GPIO.LOW and right == GPIO.LOW:
             forward()
-            if dist <= 20:
+            if dist <= 25:
                 slam()
                 
                     
         elif GPIO.input(GPIO_PINV) == GPIO.HIGH:
             stop()
-            time.sleep(0.2)
+            time.sleep(0.1)
             turn_right()
             time.sleep(0.2)
 
         elif GPIO.input(GPIO_PINH) == GPIO.HIGH:
             stop()
-            time.sleep(0.2)
+            time.sleep(0.1)
             turn_left()
             time.sleep(0.2)
-        elif left == GPIO.HIGH or right == GPIO.HIGH:
+        elif left == GPIO.HIGH and right == GPIO.HIGH:
             turn_back()
-            time.sleep(0.09)
+            time.sleep(0.3)
 
-        if turnedback and dist >= 20:
+        if turnedback and dist >= 25:
             turn_back()
             time.sleep(0.4)
 
