@@ -186,6 +186,7 @@ def get_distance():
 def Sumo():
     global turnedback
     global running
+    haveslammed = False
     print("STARTING!")  
     while running:
 
@@ -207,6 +208,8 @@ def Sumo():
         if left == GPIO.LOW and right == GPIO.LOW:
             forward()
             if dist <= 25:
+                haveslammed
+            if haveslammed:
                 slam()
                 
                     
@@ -215,17 +218,20 @@ def Sumo():
             time.sleep(0.1)
             turn_right()
             time.sleep(0.2)
+            haveslammed = False
 
         elif GPIO.input(GPIO_PINH) == GPIO.HIGH:
             stop()
             time.sleep(0.1)
             turn_left()
             time.sleep(0.2)
+            haveslammed = False
         elif left == GPIO.HIGH and right == GPIO.HIGH:
             turn_back()
             time.sleep(0.3)
+            haveslammed = False
 
-        if turnedback and dist >= 25:
+        if turnedback and dist >= 25 and haveslammed == False:
             turn_back()
             time.sleep(0.4)
 
