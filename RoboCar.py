@@ -21,6 +21,8 @@ GPIO_PINV = 26
 
 sensor_delay = 0.03  
 
+last_direction = "forward" 
+
 # --- GPIO SETUP ---
 GPIO.cleanup()
 GPIO.setwarnings(False)
@@ -97,10 +99,10 @@ def turn_left():
     GPIO.output(dir_right_fwd, True)
     GPIO.output(dir_right_bwd, False)
 
-    pwmL1.ChangeDutyCycle(75)
-    pwmL2.ChangeDutyCycle(95)
-    pwmR1.ChangeDutyCycle(75)
-    pwmR2.ChangeDutyCycle(100)
+    pwmL1.ChangeDutyCycle(65)
+    pwmL2.ChangeDutyCycle(65)
+    pwmR1.ChangeDutyCycle(65)
+    pwmR2.ChangeDutyCycle(85)
 
 
 def turn_right():
@@ -111,10 +113,10 @@ def turn_right():
     GPIO.output(dir_right_fwd, False)
     GPIO.output(dir_right_bwd, True)
 
-    pwmL1.ChangeDutyCycle(75)
-    pwmL2.ChangeDutyCycle(100)
-    pwmR1.ChangeDutyCycle(75)
-    pwmR2.ChangeDutyCycle(95)
+    pwmL1.ChangeDutyCycle(65)
+    pwmL2.ChangeDutyCycle(85)
+    pwmR1.ChangeDutyCycle(65)
+    pwmR2.ChangeDutyCycle(65)
 
 
 #MAIN LINE LOOP
@@ -137,19 +139,31 @@ def line_follow_loop():
 
         if GPIO.input(GPIO_PINV) == GPIO.LOW and GPIO.input(GPIO_PINH) == GPIO.LOW:
             forward()
+            last_direction = "forward"
 
-        if GPIO.input(GPIO_PINV) == GPIO.HIGH and GPIO.input(GPIO_PINH) == GPIO.HIGH:
+        elif GPIO.input(GPIO_PINV) == GPIO.HIGH and GPIO.input(GPIO_PINH) == GPIO.HIGH:
             forward()
             time.sleep(0.05)
+            last_direction = "forward"
             
 
         elif GPIO.input(GPIO_PINH) == GPIO.HIGH:
             turn_right()
             time.sleep(0.01)
+            last_direction = "right"
 
         elif GPIO.input(GPIO_PINV) == GPIO.HIGH:
             turn_left()
             time.sleep(0.01)
+            last_direction = "left"
+        
+        else:
+            if last_direction == "right":
+                turn_right()
+            elif last_direction == "left":
+                turn_left()
+            else:
+                forward()
 
         time.sleep(delayTime)
 
