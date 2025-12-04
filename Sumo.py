@@ -117,6 +117,19 @@ def turn_right():
     pwmR1.ChangeDutyCycle(75)
     pwmR2.ChangeDutyCycle(75)
 
+def turn_back():
+    GPIO.output(dir_left_fwd, False)
+    GPIO.output(dir_left_bwd, True)
+
+    # Right motor inverted
+    GPIO.output(dir_right_fwd, True)
+    GPIO.output(dir_right_bwd, False)
+
+    pwmL1.ChangeDutyCycle(65)
+    pwmL2.ChangeDutyCycle(65)
+    pwmR1.ChangeDutyCycle(65)
+    pwmR2.ChangeDutyCycle(65)
+
 def slam():
     print("Slamming")
     
@@ -178,7 +191,8 @@ def Sumo():
         if left == GPIO.LOW and right == GPIO.LOW:
             forward()
             if dist <= 20:
-                slam()
+                if left == GPIO.HIGH or right == GPIO.HIGH:    
+                    slam()
 
         elif GPIO.input(GPIO_PINV) == GPIO.HIGH:
             turn_right()
@@ -187,7 +201,9 @@ def Sumo():
         elif GPIO.input(GPIO_PINH) == GPIO.HIGH:
             turn_left()
             time.sleep(0.02)
-        
+        elif left == GPIO.HIGH or right == GPIO.HIGH:
+            turn_back()
+            time.sleep(0.02)
 
         time.sleep(delayTime)
 
