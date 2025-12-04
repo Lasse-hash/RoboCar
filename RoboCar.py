@@ -85,10 +85,10 @@ def forward():
     GPIO.output(dir_right_fwd, False)
     GPIO.output(dir_right_bwd, True)
 
-    pwmL1.ChangeDutyCycle(20)
-    pwmL2.ChangeDutyCycle(20)
-    pwmR1.ChangeDutyCycle(20)
-    pwmR2.ChangeDutyCycle(20)
+    pwmL1.ChangeDutyCycle(25)
+    pwmL2.ChangeDutyCycle(25)
+    pwmR1.ChangeDutyCycle(25)
+    pwmR2.ChangeDutyCycle(25)
 
 
 def turn_left():
