@@ -179,9 +179,6 @@ def Sumo():
             forward()
             if dist <= 20:
                 slam()
-            else:
-                pwmL1.ChangeDutyCycle(random.uniform(40, 65))
-                pwmR1.ChangeDutyCycle(random.uniform(40, 65))
 
         elif GPIO.input(GPIO_PINV) == GPIO.HIGH:
             turn_right()
