@@ -185,11 +185,11 @@ def Sumo():
 
         elif GPIO.input(GPIO_PINV) == GPIO.HIGH:
             turn_right()
-            time.sleep(0.2)
+            time.sleep(0.02)
 
         elif GPIO.input(GPIO_PINH) == GPIO.HIGH:
             turn_left()
-            time.sleep(0.2)
+            time.sleep(0.02)
         
 
         time.sleep(delayTime)
