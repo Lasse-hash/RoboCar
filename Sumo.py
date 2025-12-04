@@ -24,7 +24,7 @@ GPIO_PINV = 26
 TRIG = 3   # Example GPIO pin for Trigger
 ECHO = 2   # Example GPIO pin for Echo
 
-sensor_delay = 0.003
+sensor_delay = 0.0005
 
 for pin in [pwm1_left, pwm2_left, dir_left_fwd, dir_left_bwd,
             pwm1_right, pwm2_right, dir_right_fwd, dir_right_bwd]:
@@ -49,7 +49,7 @@ GPIO.setup(ECHO, GPIO.IN)
 
 running = True
 
-delayTime = 0.1
+delayTime = 0.005
 
 def press(key):
     global running
@@ -98,10 +98,10 @@ def turn_left():
     GPIO.output(dir_right_fwd, False)
     GPIO.output(dir_right_bwd, True)
 
-    pwmL1.ChangeDutyCycle(50)
-    pwmL2.ChangeDutyCycle(65)
-    pwmR1.ChangeDutyCycle(65)
-    pwmR2.ChangeDutyCycle(75)
+    pwmL1.ChangeDutyCycle(75)
+    pwmL2.ChangeDutyCycle(75)
+    pwmR1.ChangeDutyCycle(75)
+    pwmR2.ChangeDutyCycle(85)
 
 
 def turn_right():
@@ -112,10 +112,10 @@ def turn_right():
     GPIO.output(dir_right_fwd, True)
     GPIO.output(dir_right_bwd, False)
 
-    pwmL1.ChangeDutyCycle(65)
-    pwmL2.ChangeDutyCycle(75)
-    pwmR1.ChangeDutyCycle(50)
-    pwmR2.ChangeDutyCycle(65)
+    pwmL1.ChangeDutyCycle(75)
+    pwmL2.ChangeDutyCycle(85)
+    pwmR1.ChangeDutyCycle(75)
+    pwmR2.ChangeDutyCycle(75)
 
 def slam():
     print("Slamming")
@@ -126,10 +126,10 @@ def slam():
     GPIO.output(dir_right_fwd, False)
     GPIO.output(dir_right_bwd, True)
 
-    pwmL1.ChangeDutyCycle(90)
-    pwmL2.ChangeDutyCycle(90)
-    pwmR1.ChangeDutyCycle(90)
-    pwmR2.ChangeDutyCycle(90)
+    pwmL1.ChangeDutyCycle(100)
+    pwmL2.ChangeDutyCycle(100)
+    pwmR1.ChangeDutyCycle(100)
+    pwmR2.ChangeDutyCycle(100)
 
 def get_distance():
     # Ensure trigger is low
