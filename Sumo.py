@@ -185,11 +185,11 @@ def Sumo():
                 pwmL1.ChangeDutyCycle(random.uniform(40, 65))
                 pwmR1.ChangeDutyCycle(random.uniform(40, 65))
 
-        elif GPIO.input(GPIO_PINH) == GPIO.HIGH:
+        elif GPIO.input(GPIO_PINV) == GPIO.HIGH:
             turn_right()
             time.sleep(0.2)
 
-        elif GPIO.input(GPIO_PINV) == GPIO.HIGH:
+        elif GPIO.input(GPIO_PINH) == GPIO.HIGH:
             turn_left()
             time.sleep(0.2)
         
