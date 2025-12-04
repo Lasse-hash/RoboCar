@@ -126,10 +126,10 @@ def slam():
     GPIO.output(dir_right_fwd, False)
     GPIO.output(dir_right_bwd, True)
 
-    pwmL1.ChangeDutyCycle(90)
-    pwmL2.ChangeDutyCycle(90)
-    pwmR1.ChangeDutyCycle(90)
-    pwmR2.ChangeDutyCycle(90)
+    pwmL1.ChangeDutyCycle(50)
+    pwmL2.ChangeDutyCycle(50)
+    pwmR1.ChangeDutyCycle(50)
+    pwmR2.ChangeDutyCycle(50)
 
 def get_distance():
     # Ensure trigger is low
@@ -160,6 +160,8 @@ def Sumo():
     while running:
 
         dist = get_distance()
+
+        print(f"distance: {dist}")
         
         right = GPIO.input(GPIO_PINV)
         left = GPIO.input(GPIO_PINH)
