@@ -21,6 +21,8 @@ dir_right_bwd = 22
 GPIO_PINH = 24
 GPIO_PINV = 26
 
+turnedback = False
+
 TRIG = 3   # Example GPIO pin for Trigger
 ECHO = 2   # Example GPIO pin for Echo
 
@@ -56,7 +58,9 @@ def press(key):
     if key == "q":
         print("stopping")
         running = False
-        stop()        
+        stop()  
+        print("STOPPED")
+        GPIO.cleanup()      
 
 
 def stop():
@@ -72,9 +76,9 @@ def stop():
     pwmR1.ChangeDutyCycle(0)
     pwmR2.ChangeDutyCycle(0)
 
-    print("STOPPED")
+   
 
-    GPIO.cleanup()
+    
 
 
 def forward():
@@ -106,6 +110,7 @@ def turn_left():
 
 def turn_right():
     print("Turning RIGHT...")
+
     GPIO.output(dir_left_bwd, True)
     GPIO.output(dir_left_fwd, False)
 
@@ -118,6 +123,8 @@ def turn_right():
     pwmR2.ChangeDutyCycle(100)
 
 def turn_back():
+    global turnedback
+
     GPIO.output(dir_left_fwd, False)
     GPIO.output(dir_left_bwd, True)
 
@@ -125,12 +132,16 @@ def turn_back():
     GPIO.output(dir_right_fwd, True)
     GPIO.output(dir_right_bwd, False)
 
-    pwmL1.ChangeDutyCycle(65)
-    pwmL2.ChangeDutyCycle(65)
-    pwmR1.ChangeDutyCycle(65)
-    pwmR2.ChangeDutyCycle(65)
+    pwmL1.ChangeDutyCycle(85)
+    pwmL2.ChangeDutyCycle(85)
+    pwmR1.ChangeDutyCycle(85)
+    pwmR2.ChangeDutyCycle(85)
+    
+    turnedback = False
 
 def slam():
+    global turnedback
+
     print("Slamming")
     
     GPIO.output(dir_left_fwd, True)
@@ -143,6 +154,8 @@ def slam():
     pwmL2.ChangeDutyCycle(100)
     pwmR1.ChangeDutyCycle(100)
     pwmR2.ChangeDutyCycle(100)
+
+    turnedback = True
 
 def get_distance():
     # Ensure trigger is low
@@ -169,6 +182,7 @@ def get_distance():
     return round(distance_cm, 2)
 
 def Sumo():
+    global turnedback
     global running
     print("STARTING!")  
     while running:
@@ -195,13 +209,21 @@ def Sumo():
                 
                     
         elif GPIO.input(GPIO_PINV) == GPIO.HIGH:
+            stop()
+            time.sleep(0.001)
             turn_right()
-            time.sleep(0.05)
+            time.sleep(0.02)
 
         elif GPIO.input(GPIO_PINH) == GPIO.HIGH:
+            stop()
+            time.sleep(0.001)
             turn_left()
-            time.sleep(0.05)
+            time.sleep(0.02)
         elif left == GPIO.HIGH or right == GPIO.HIGH:
+            turn_back()
+            time.sleep(0.02)
+
+        if turnedback and dist >= 20:
             turn_back()
             time.sleep(0.02)
 
