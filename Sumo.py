@@ -227,7 +227,7 @@ def Sumo():
 
         if turnedback and dist >= 20:
             turn_back()
-            time.sleep(0.02)
+            time.sleep(1)
 
         time.sleep(delayTime)
 
