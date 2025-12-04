@@ -135,7 +135,12 @@ def line_follow_loop():
         left2 = GPIO.input(GPIO_PINH)
         
         if left != left2 or right != right2:
-            continue  
+            if last_direction == "right":
+                turn_right()
+            elif last_direction == "left":
+                turn_left()
+            else:
+                forward()
 
         if GPIO.input(GPIO_PINV) == GPIO.LOW and GPIO.input(GPIO_PINH) == GPIO.LOW:
             forward()
