@@ -84,10 +84,10 @@ def forward():
     GPIO.output(dir_right_fwd, False)
     GPIO.output(dir_right_bwd, True)
 
-    pwmL1.ChangeDutyCycle(40)
-    pwmL2.ChangeDutyCycle(40)
-    pwmR1.ChangeDutyCycle(40)
-    pwmR2.ChangeDutyCycle(40)
+    pwmL1.ChangeDutyCycle(30)
+    pwmL2.ChangeDutyCycle(30)
+    pwmR1.ChangeDutyCycle(30)
+    pwmR2.ChangeDutyCycle(30)
 
 
 def turn_left():
@@ -98,10 +98,10 @@ def turn_left():
     GPIO.output(dir_right_fwd, True)
     GPIO.output(dir_right_bwd, False)
 
-    pwmL1.ChangeDutyCycle(75)
-    pwmL2.ChangeDutyCycle(75)
-    pwmR1.ChangeDutyCycle(75)
-    pwmR2.ChangeDutyCycle(85)
+    pwmL1.ChangeDutyCycle(100)
+    pwmL2.ChangeDutyCycle(100)
+    pwmR1.ChangeDutyCycle(100)
+    pwmR2.ChangeDutyCycle(100)
 
 
 def turn_right():
@@ -112,10 +112,10 @@ def turn_right():
     GPIO.output(dir_right_fwd, False)
     GPIO.output(dir_right_bwd, True)
 
-    pwmL1.ChangeDutyCycle(75)
-    pwmL2.ChangeDutyCycle(85)
-    pwmR1.ChangeDutyCycle(75)
-    pwmR2.ChangeDutyCycle(75)
+    pwmL1.ChangeDutyCycle(100)
+    pwmL2.ChangeDutyCycle(100)
+    pwmR1.ChangeDutyCycle(100)
+    pwmR2.ChangeDutyCycle(100)
 
 def turn_back():
     GPIO.output(dir_left_fwd, False)
@@ -191,16 +191,16 @@ def Sumo():
         if left == GPIO.LOW and right == GPIO.LOW:
             forward()
             if dist <= 20:
-                if left == GPIO.HIGH or right == GPIO.HIGH:    
-                    slam()
-
+                slam()
+                
+                    
         elif GPIO.input(GPIO_PINV) == GPIO.HIGH:
             turn_right()
-            time.sleep(0.02)
+            time.sleep(0.05)
 
         elif GPIO.input(GPIO_PINH) == GPIO.HIGH:
             turn_left()
-            time.sleep(0.02)
+            time.sleep(0.05)
         elif left == GPIO.HIGH or right == GPIO.HIGH:
             turn_back()
             time.sleep(0.02)
