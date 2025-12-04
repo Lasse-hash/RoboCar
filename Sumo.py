@@ -210,13 +210,13 @@ def Sumo():
                     
         elif GPIO.input(GPIO_PINV) == GPIO.HIGH:
             stop()
-            time.sleep(0.001)
+            time.sleep(0.01)
             turn_right()
             time.sleep(0.02)
 
         elif GPIO.input(GPIO_PINH) == GPIO.HIGH:
             stop()
-            time.sleep(0.001)
+            time.sleep(0.01)
             turn_left()
             time.sleep(0.02)
         elif left == GPIO.HIGH or right == GPIO.HIGH:
