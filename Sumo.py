@@ -208,7 +208,7 @@ def Sumo():
         if left == GPIO.LOW and right == GPIO.LOW:
             forward()
             if dist <= 25:
-                haveslammed
+                haveslammed = True
             if haveslammed:
                 slam()
                 
