@@ -30,6 +30,9 @@ for pin in [pwm1_left, pwm2_left, dir_left_fwd, dir_left_bwd,
             pwm1_right, pwm2_right, dir_right_fwd, dir_right_bwd]:
     GPIO.setup(pin, GPIO.OUT)
 
+GPIO.setup(GPIO_PINH, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+GPIO.setup(GPIO_PINV, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+
 # --- PWM objects ---
 pwmL1 = GPIO.PWM(pwm1_left, 1000)
 pwmL2 = GPIO.PWM(pwm2_left, 1000)
