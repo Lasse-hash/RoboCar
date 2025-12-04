@@ -1,59 +1,201 @@
 import RPi.GPIO as GPIO
 import time
+from sshkeyboard import listen_keyboard
+import random
+import threading
 
+# Use BCM (Broadcom pin numbering)
 GPIO.setmode(GPIO.BCM)
+# --- Left motor ---
+pwm1_left = 13
+pwm2_left = 12
+dir_left_fwd = 17
+dir_left_bwd = 23
 
-TRIG = 20
-ECHO = 16
+# --- Right motor ---
+pwm1_right = 19
+pwm2_right = 18
+dir_right_fwd = 27
+dir_right_bwd = 22
+
+GPIO_PINH = 24
+GPIO_PINV = 26
+
+TRIG = 3   # Example GPIO pin for Trigger
+ECHO = 2   # Example GPIO pin for Echo
+
+sensor_delay = 0.003
+
+for pin in [pwm1_left, pwm2_left, dir_left_fwd, dir_left_bwd,
+            pwm1_right, pwm2_right, dir_right_fwd, dir_right_bwd]:
+    GPIO.setup(pin, GPIO.OUT)
+
+GPIO.setup(GPIO_PINH, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+GPIO.setup(GPIO_PINV, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+
+# --- PWM objects ---
+pwmL1 = GPIO.PWM(pwm1_left, 1000)
+pwmL2 = GPIO.PWM(pwm2_left, 1000)
+pwmR1 = GPIO.PWM(pwm1_right, 1000)
+pwmR2 = GPIO.PWM(pwm2_right, 1000)
+
+pwmL1.start(0)
+pwmL2.start(0)
+pwmR1.start(0)
+pwmR2.start(0)
 
 GPIO.setup(TRIG, GPIO.OUT)
 GPIO.setup(ECHO, GPIO.IN)
 
-GPIO.output(TRIG, False)
-print("Calibrating…")
-time.sleep(2)
-print("Place the object…")
+running = True
+
+delayTime = 0.1
+
+def press(key):
+    global running
+    if key == "q":
+        print("stopping")
+        running = False
+        stop()        
+
+
+def stop():
+    
+
+    GPIO.output(dir_left_fwd, False)
+    GPIO.output(dir_left_bwd, False)
+    GPIO.output(dir_right_fwd, False)
+    GPIO.output(dir_right_bwd, False)
+
+    pwmL1.ChangeDutyCycle(0)
+    pwmL2.ChangeDutyCycle(0)
+    pwmR1.ChangeDutyCycle(0)
+    pwmR2.ChangeDutyCycle(0)
+
+    print("STOPPED")
+
+    GPIO.cleanup()
+
+
+def forward():
+    GPIO.output(dir_left_fwd, True)
+    GPIO.output(dir_left_bwd, False)
+
+    GPIO.output(dir_right_fwd, False)
+    GPIO.output(dir_right_bwd, True)
+
+    pwmL1.ChangeDutyCycle(30)
+    pwmL2.ChangeDutyCycle(30)
+    pwmR1.ChangeDutyCycle(30)
+    pwmR2.ChangeDutyCycle(30)
+
+
+def turn_left():
+    print("Turning LEFT...")
+    GPIO.output(dir_left_bwd, False)
+    GPIO.output(dir_left_fwd, True)
+
+    GPIO.output(dir_right_fwd, True)
+    GPIO.output(dir_right_bwd, False)
+
+    pwmL1.ChangeDutyCycle(50)
+    pwmL2.ChangeDutyCycle(65)
+    pwmR1.ChangeDutyCycle(65)
+    pwmR2.ChangeDutyCycle(75)
+
+
+def turn_right():
+    print("Turning RIGHT...")
+    GPIO.output(dir_left_bwd, True)
+    GPIO.output(dir_left_fwd, False)
+
+    GPIO.output(dir_right_fwd, False)
+    GPIO.output(dir_right_bwd, True)
+
+    pwmL1.ChangeDutyCycle(65)
+    pwmL2.ChangeDutyCycle(75)
+    pwmR1.ChangeDutyCycle(50)
+    pwmR2.ChangeDutyCycle(65)
+
+def slam():
+    print("Slamming")
+    
+    GPIO.output(dir_left_fwd, True)
+    GPIO.output(dir_left_bwd, False)
+
+    GPIO.output(dir_right_fwd, False)
+    GPIO.output(dir_right_bwd, True)
+
+    pwmL1.ChangeDutyCycle(90)
+    pwmL2.ChangeDutyCycle(90)
+    pwmR1.ChangeDutyCycle(90)
+    pwmR2.ChangeDutyCycle(90)
 
 def get_distance():
-    # Send trigger pulse
+    # Ensure trigger is low
+    GPIO.output(TRIG, False)
+    time.sleep(0.05)
+
+    # Send a 10µs pulse to trigger
     GPIO.output(TRIG, True)
-    time.sleep(0.00001)   # 10 microseconds
+    time.sleep(0.00001)
     GPIO.output(TRIG, False)
 
-    # Wait for echo to go HIGH
-    start_time = time.time()
-    timeout = start_time + 0.02  # 20ms timeout
-
+    # Wait for echo start
     while GPIO.input(ECHO) == 0:
         pulse_start = time.time()
-        if pulse_start > timeout:
-            return None  # no echo received
 
-    # Wait for echo to go LOW
-    timeout = time.time() + 0.02
+    # Wait for echo end
     while GPIO.input(ECHO) == 1:
         pulse_end = time.time()
-        if pulse_end > timeout:
-            return None
 
-    # Calculate distance
     pulse_duration = pulse_end - pulse_start
-    distance = pulse_duration * 17150  # cm
+    # Speed of sound ~34300 cm/s
+    distance_cm = pulse_duration * 34300 / 2
+    return distance_cm
 
-    return round(distance, 2)
+def Sumo():
+    global running
+    print("STARTING!")  
+    while running:
+
+        dist = get_distance()
+
+        print(f"distance: {dist}")
+        
+        right = GPIO.input(GPIO_PINV)
+        left = GPIO.input(GPIO_PINH)
+
+        time.sleep(sensor_delay)
+
+        right2 = GPIO.input(GPIO_PINV)
+        left2 = GPIO.input(GPIO_PINH)
+        
+        if left != left2 or right != right2:
+            continue  
+
+        if GPIO.input(GPIO_PINV) == GPIO.LOW and GPIO.input(GPIO_PINH) == GPIO.LOW:
+            forward()
+
+        elif GPIO.input(GPIO_PINH) == GPIO.HIGH:
+            turn_right()
+            time.sleep(1)
+
+        elif GPIO.input(GPIO_PINV) == GPIO.HIGH:
+            turn_left()
+            time.sleep(1)
+
+        if dist <= 20:
+            slam()
+        
+
+        time.sleep(delayTime)
+
+threading.Thread(
+    target=lambda: listen_keyboard(on_press=press),
+    daemon=True
+).start()
+
+Sumo()
 
 
-try:
-    while True:
-        d = get_distance()
-
-        if d is None:
-            print("⚠ No echo received — sensor not detecting anything")
-        else:
-            print(f"Distance: {d} cm")
-
-        time.sleep(0.3)
-
-except KeyboardInterrupt:
-    GPIO.cleanup()
-    print("Clean exit")
