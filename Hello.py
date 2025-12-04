@@ -48,12 +48,12 @@ def forward():
     pwmR1.ChangeDutyCycle(95)
     pwmR2.ChangeDutyCycle(95)
 def backward():
-    GPIO.output(dir_left_fwd, True)
-    GPIO.output(dir_left_bwd, False)
+    GPIO.output(dir_left_fwd, False)
+    GPIO.output(dir_left_bwd, True)
 
     # Right motor inverted
-    GPIO.output(dir_right_fwd, False)
-    GPIO.output(dir_right_bwd, True)
+    GPIO.output(dir_right_fwd, True)
+    GPIO.output(dir_right_bwd, False)
 
     pwmL1.ChangeDutyCycle(65)
     pwmL2.ChangeDutyCycle(65)
@@ -67,10 +67,10 @@ def turnLeft():
     GPIO.output(dir_right_fwd, True)
     GPIO.output(dir_right_bwd, False)
 
-    pwmL1.ChangeDutyCycle(65)
-    pwmL2.ChangeDutyCycle(65)
-    pwmR1.ChangeDutyCycle(65)
-    pwmR2.ChangeDutyCycle(90)
+    pwmL1.ChangeDutyCycle(85)
+    pwmL2.ChangeDutyCycle(85)
+    pwmR1.ChangeDutyCycle(85)
+    pwmR2.ChangeDutyCycle(100)
 
 def turnRight():
 
@@ -80,10 +80,10 @@ def turnRight():
     GPIO.output(dir_right_fwd, False)
     GPIO.output(dir_right_bwd, True)
 
-    pwmL1.ChangeDutyCycle(65)
-    pwmL2.ChangeDutyCycle(90)
-    pwmR1.ChangeDutyCycle(65)
-    pwmR2.ChangeDutyCycle(65)
+    pwmL1.ChangeDutyCycle(85)
+    pwmL2.ChangeDutyCycle(100)
+    pwmR1.ChangeDutyCycle(85)
+    pwmR2.ChangeDutyCycle(85)
 
 def stop():
     GPIO.output(dir_left_bwd, False)
