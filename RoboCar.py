@@ -167,6 +167,9 @@ def line_follow_loop():
 
         time.sleep(delayTime)
 
+except KeyboardInterrupt:
+    GPIO.cleanup()
+    
 threading.Thread(
     target=lambda: listen_keyboard(on_press=press),
     daemon=True
